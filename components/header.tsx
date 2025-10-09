@@ -56,9 +56,11 @@ export function Header() {
                   <ImagePlus className="mr-2 h-4 w-4" />
                   <span>Replace background</span>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Type className="mr-2 h-4 w-4" />
-                  <span>Text to image</span>
+                <DropdownMenuItem asChild>
+                  <a href="/image-edit" className="flex items-center">
+                    <Type className="mr-2 h-4 w-4" />
+                    <span>Image Edit</span>
+                  </a>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
