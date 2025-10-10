@@ -1,21 +1,32 @@
 import { Button } from "@/components/ui/button"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { createClient } from "@/lib/supabase/server"
 import {
   ChevronDown,
   Sparkles,
   Eraser,
   ArrowUpCircle,
-  Lightbulb,
   ImageOff,
   ImagePlus,
   Type,
-  RemoveFormatting,
-  Crop,
-  Maximize2,
-  FileText,
+  LogOut,
+  User,
 } from "lucide-react"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { SignInDropdown } from "@/components/sign-in-dropdown"
 
-export function Header() {
+export async function Header() {
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
   return (
     <header className="border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto px-4 py-4">
@@ -73,9 +84,49 @@ export function Header() {
             <a href="/pricing" className="text-sm text-foreground hover:text-primary transition-colors">
               Pricing
             </a>
-            <Button variant="outline" size="sm">
-              Sign in / Sign up
-            </Button>
+
+            {user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+                    <Avatar className="h-10 w-10">
+                      <AvatarImage src={user.user_metadata?.avatar_url} alt={user.email || ""} />
+                      <AvatarFallback>
+                        {user.email?.charAt(0).toUpperCase() || <User className="h-4 w-4" />}
+                      </AvatarFallback>
+                    </Avatar>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <div className="flex items-center justify-start gap-2 p-2">
+                    <div className="flex flex-col space-y-1 leading-none">
+                      {user.user_metadata?.full_name && (
+                        <p className="font-medium">{user.user_metadata.full_name}</p>
+                      )}
+                      {user.email && <p className="w-[200px] truncate text-sm text-muted-foreground">{user.email}</p>}
+                    </div>
+                  </div>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <a href="/profile" className="cursor-pointer">
+                      <User className="mr-2 h-4 w-4" />
+                      Profile
+                    </a>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <form action="/api/auth/logout" method="POST" className="w-full">
+                      <button type="submit" className="flex w-full items-center cursor-pointer">
+                        <LogOut className="mr-2 h-4 w-4" />
+                        Log out
+                      </button>
+                    </form>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <SignInDropdown />
+            )}
           </div>
         </nav>
       </div>
