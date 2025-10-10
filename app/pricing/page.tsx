@@ -68,6 +68,14 @@ export default function PricingPage() {
                 <span className="mr-2">•</span>
                 <span>High quality refiner</span>
               </li>
+              <li className="flex items-start">
+                <span className="mr-2">•</span>
+                <span>Remove background</span>
+              </li>
+              <li className="flex items-start">
+                <span className="mr-2">•</span>
+                <span>Replace background</span>
+              </li>
             </ul>
 
             <Button className="w-full bg-black hover:bg-neutral-800 text-white rounded-full">Try it free</Button>
