@@ -4,6 +4,9 @@ import { ToolsSection } from "@/components/tools-section"
 import { ApiSection } from "@/components/api-section"
 import { FaqSection } from "@/components/faq-section"
 
+// Use Node.js runtime for Supabase compatibility
+export const runtime = 'nodejs'
+
 export default function Home() {
   return (
     <div className="min-h-screen">
