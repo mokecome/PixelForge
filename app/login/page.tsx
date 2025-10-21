@@ -8,7 +8,7 @@ import { Github } from "lucide-react"
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: { provider?: string }
+  searchParams: Promise<{ provider?: string }>
 }) {
   const supabase = await createClient()
 
@@ -22,7 +22,8 @@ export default async function LoginPage({
   }
 
   // Handle direct provider login from dropdown
-  const provider = searchParams.provider
+  const params = await searchParams
+  const provider = params.provider
   if (provider === "github" || provider === "google") {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: provider as "github" | "google",
