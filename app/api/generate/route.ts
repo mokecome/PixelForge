@@ -1,17 +1,27 @@
 import { NextRequest, NextResponse } from "next/server"
 import OpenAI from "openai"
 
-const openai = new OpenAI({
-  baseURL: "https://openrouter.ai/api/v1",
-  apiKey: process.env.OPENROUTER_API_KEY,
-  defaultHeaders: {
-    "HTTP-Referer": "https://pixelforge.ai",
-    "X-Title": "PixelForge AI Image Editor",
-  },
-})
+// Initialize OpenAI client lazily to avoid build-time errors when env var is missing
+function getOpenAIClient() {
+  if (!process.env.OPENROUTER_API_KEY) {
+    throw new Error(
+      "OPENROUTER_API_KEY is not configured. Please add it to your .env.local file. See .env.example for reference."
+    )
+  }
+
+  return new OpenAI({
+    baseURL: "https://openrouter.ai/api/v1",
+    apiKey: process.env.OPENROUTER_API_KEY,
+    defaultHeaders: {
+      "HTTP-Referer": "https://pixelforge.ai",
+      "X-Title": "PixelForge AI Image Editor",
+    },
+  })
+}
 
 export async function POST(request: NextRequest) {
   try {
+    const openai = getOpenAIClient()
     const { prompt, imageBase64 } = await request.json()
 
     if (!prompt) {

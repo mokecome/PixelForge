@@ -1,6 +1,12 @@
 import { createServerClient } from "@supabase/ssr"
 import { NextResponse, type NextRequest } from "next/server"
 
+/**
+ * Middleware runs on Edge Runtime by default in Next.js.
+ * Note: You may see build warnings about Node.js APIs (process.versions, process.version)
+ * from @supabase/ssr. These are safe to ignore as Supabase handles runtime differences internally.
+ * The library performs environment detection at build time but works correctly on Edge Runtime.
+ */
 export async function middleware(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
     request,
